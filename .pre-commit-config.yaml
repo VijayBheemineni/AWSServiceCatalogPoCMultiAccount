@@ -1,0 +1,112 @@
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+        args: ["--unsafe"] # Allow custom YAML tags
+      - id: check-added-large-files
+        name: Check for large files
+        args: ["--maxkb=1000"]
+      - id: check-case-conflict
+        name: Check for case conflicts
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: detect-private-key
+        name: Detect private keys
+      - id: mixed-line-ending
+        name: Fix mixed line endings
+        args: ["--fix=lf"]
+      - id: check-json
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  # ----------------------------------------------------------
+  # Terraform Hooks (fmt, validate, tflint, docs, checkov)
+  # ----------------------------------------------------------
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.0
+    hooks:
+      - id: terraform_fmt
+        name: Terraform format
+        description: Rewrites Terraform files to canonical format
+      - id: terraform_validate
+        name: Terraform validate
+        description: Validates Terraform configuration files
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+      - id: terraform_docs
+        name: Terraform docs
+        description: Generate Terraform documentation
+        args:
+          - --hook-config=--path-to-file=TERRAFORM.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true
+      - id: terraform_tflint
+        name: Terraform lint
+        description: Lints Terraform files with TFLint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+      - id: terraform_checkov
+        name: Terraform security scan
+        description: Runs Checkov security scanner on Terraform
+        args:
+          - --args=--quiet
+          - --args=--framework terraform
+
+  # Commented out temporarily as we are not using Python.
+  # # ----------------------------------------------------------
+  # # Python Formatting + Linting + Security
+  # # ----------------------------------------------------------
+  # - repo: https://github.com/psf/black
+  #   rev: 24.3.0
+  #   hooks:
+  #     - id: black
+
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: 7.0.0
+  #   hooks:
+  #     - id: flake8
+
+  # - repo: https://github.com/PyCQA/isort
+  #   rev: 5.13.2
+  #   hooks:
+  #     - id: isort
+
+  # - repo: https://github.com/PyCQA/bandit
+  #   rev: 1.7.9
+  #   hooks:
+  #     - id: bandit
+  #       args: ["-r", "."]
+
+  # --------------------
+  # Misc linters
+  # --------------------
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.39.0
+    hooks:
+      - id: markdownlint
+        name: Markdown lint
+        description: Lints Markdown files
+        args: ["--fix"]
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        name: Shell script lint
+        description: Lints shell scripts
+
+  # Auto fix markdown files
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0
+    hooks:
+      - id: prettier
+        args: ["--prose-wrap=always"]
+        files: "\\.(md)$"
