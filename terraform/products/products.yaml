@@ -1,0 +1,13 @@
+products:
+  - name: "s3-bucket"
+    display_name: "S3 Bucket"
+    description: "Standardized S3 bucket with naming convention and tagging"
+    owner: "Platform Team"
+    distributor: "IT Operations"
+    support_description: "Contact vijaybheemineni.jobs@gmail.com for support"
+    support_email: "vijaybheemineni.jobs@gmail.com"
+    support_url: "https://example.com/docs/s3-bucket" #Provide link to CloudTeam SNOW
+    template_path: "./products/templates/s3-bucket"
+    # Note: Parameters like environment_name, account_id, and tags are automatically
+    # provided from accounts.yaml when products are provisioned. No need to define
+    # them here - this follows the DRY principle with a single source of truth.
