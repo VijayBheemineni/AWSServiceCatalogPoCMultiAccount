@@ -13,13 +13,6 @@ Catalog, allowing teams to provision standardized resources (like S3 buckets)
 across multiple AWS accounts with consistent naming, tagging, and security
 configurations.
 
-## Code commit steps
-```sh
-# Make changes
-make pre-commit-all
-
-```
-
 ## Requirements
 
 ### Requirement 1
@@ -75,3 +68,16 @@ cd terraform
 terraform init -backend-config=backend.hcl
 terraform plan  # Automatically loads terraform.tfvars!
 ```
+
+
+## Code
+### Commit Steps
+```sh
+# Make changes
+make pre-commit-all
+git add .
+git commit -m "test commit command"
+```
+
+### Create Feature Branch for changes
+### Create Bug Branch for changes
