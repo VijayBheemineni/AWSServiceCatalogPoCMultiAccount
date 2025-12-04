@@ -26,6 +26,8 @@ configurations.
 
 ```sh
 # Pre commit commands
+# Note :- Fixed markdownlint issue of line length by adding ".markdownlint.json" and disabling "MD013" check.
+# pre-commit run prettier --all-files and then add files to stage and commit.
 pre-commit install # done through shell script
 pre-commit install --install-hooks # done through shell script
 make pre-commit-all # Runs all pre commits
