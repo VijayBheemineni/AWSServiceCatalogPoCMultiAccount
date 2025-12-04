@@ -69,6 +69,14 @@ terraform init -backend-config=backend.hcl
 terraform plan  # Automatically loads terraform.tfvars!
 ```
 
+### Requirement 4
+
+- **Create Simple Github Actions Workflow** :-
+- **Setup Github repo variables** :-
+- **Test the pipeline** :-
+  - When PR is opened, tests needs to be executed and code should be deployed to 'dev' environment :-
+  - When 'dev' is successful, code needs to merged with 'main' and tests needs to run and deployed to 'test' environment :-
+- **Validation** -
 
 ## Code
 ### Commit Steps

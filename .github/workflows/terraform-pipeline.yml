@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Terraform Pipeline
+on:
+    push:
+        branches:
+            - "**"
+jobs:
+    test:
+        name: Run Tests
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Print Echo
+              run: echo "Hello Test"
