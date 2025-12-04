@@ -74,6 +74,7 @@ terraform plan  # Automatically loads terraform.tfvars!
 ### Commit Steps
 ```sh
 # Make changes
+# Make sure executed from root directory.
 make pre-commit-all
 git add .
 git commit -m "test commit command"
@@ -81,3 +82,11 @@ git commit -m "test commit command"
 
 ### Create Feature Branch for changes
 ### Create Bug Branch for changes
+
+## Terraform
+
+### Commands
+```sh
+cd terraform
+terraform init -backend-config=backend.hcl
+```
