@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Terraform Pipeline
+on:
+  push:
+    branches:
+      - "**" # any branch push (feature or main)
+  pull_request:
+    branches:
+      - main # PR targeting main
+jobs:
+  code-quality-checks:
+    name: code-quality-checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Cache pre-commit
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Intall pre-commit dependencies
+        run: |
+          pip install pre-commit checkov yamllint
+
+      - name: Initialize TFLint
+        run: |
+          cd terraform
+          tflint --init
+        continue-on-error: true
+
+      - name: Setup terraform-docs
+        run: |
+          curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.17.0/terraform-docs-v0.17.0-linux-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz
+          chmod +x terraform-docs
+          sudo mv terraform-docs /usr/local/bin/
+          rm terraform-docs.tar.gz
+
+      - name: Run pre-commit checks
+        uses: pre-commit/action@v3.0.1
+        env:
+          SKIP: terraform_validate # No AWS credentials during this step, so skipping.
+
+      - name: Comment PR with results
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Pre-commit checks failed. Please run `pre-commit run --all-files` locally and fix the issues.'
+            })
+
+  deploy-dev:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+    needs: code-quality-checks
+    # Run ONLY when:
+    # - event == push
+    # - NOT main branch
+    if: >
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/heads/') &&
+      github.ref != 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Dev
+        run: |
+          echo "Deploying to dev environment..."
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deployed to dev"
+
+  deploy-test:
+    name: Deploy to Test
+    runs-on: ubuntu-latest
+    needs: code-quality-checks
+    # Run ONLY when:
+    # - event == push
+    # - branch == main
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Test
+        run: |
+          echo "Deploying to Test environment..."
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Deployed to Test"

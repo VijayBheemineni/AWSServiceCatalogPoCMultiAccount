@@ -50,6 +50,11 @@ security:
 	@echo "Running Checkov security scan..."
 	@cd terraform && checkov --directory . --quiet
 
+# Run security verification (check for secrets)
+security-check:
+	@echo "Running security verification..."
+	@./scripts/verify-security.sh
+
 # Lint YAML files
 yaml-lint:
 	@echo "Linting YAML files..."

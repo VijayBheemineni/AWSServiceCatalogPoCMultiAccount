@@ -102,11 +102,38 @@ else
 fi
 
 echo ""
-echo "🔧 Initializing TFLint plugins..."
-cd terraform 2>/dev/null && tflint --init && cd .. || echo "⚠️  Run 'tflint --init' manually in the terraform directory."
+echo " Initializing TFLint plugins..."
+cd terraform 2>/dev/null && tflint --init && cd .. || echo " Run 'tflint --init' manually in the terraform directory."
+# -----------------------------
+# Create minimal .tflint.hcl if missing
+# -----------------------------
+TFLINT_CONFIG="terraform/.tflint.hcl"
+
+if [ ! -f "$TFLINT_CONFIG" ]; then
+    echo ""
+    echo "Creating minimal terraform/.tflint.hcl file..."
+    cat > "$TFLINT_CONFIG" <<EOF
+# Minimal TFLint configuration
+
+plugin "aws" {
+  enabled = true
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+  version = "0.34.0"
+}
+
+# Example rule
+rule "aws_instance_invalid_type" {
+  enabled = true
+}
+EOF
+    echo "${TFLINT_CONFIG} created successfully."
+else
+    echo "${TFLINT_CONFIG} already exists, skipping creation."
+fi
+
 
 echo ""
-echo "🔧 Installing pre-commit hooks..."
+echo " Installing pre-commit hooks..."
 echo "   This will download and setup all hook environments (may take a few minutes)..."
 pre-commit install --install-hooks
 pre-commit install --hook-type commit-msg

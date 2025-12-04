@@ -1,0 +1,4 @@
+# Copy this file as "backend.hcl" and updated with your own values.
+bucket = "my-terraform-state-bucket"
+key    = "service-catalog/terraform.tfstate"
+region = "us-west-2"

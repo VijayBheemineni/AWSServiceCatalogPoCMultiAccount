@@ -31,7 +31,7 @@ configurations.
 pre-commit install # done through shell script
 pre-commit install --install-hooks # done through shell script
 make pre-commit-all # Runs all pre commits
-pre-commit run prettier --all-files # run prettier
+p`re-commit run prettier --all-files # run prettier
 ```
 
 ```sh
@@ -40,4 +40,61 @@ make help
 make clean
 make setup
 make pre-commit-all
+```
+
+- **Validation** :-
+
+```sh
+# Before commiting execute 'make pre-commit-all two times(First time corrects the issues, second time validates the issues.)'
+# Add files and then commit.
+```
+
+### Requirement 3
+
+- **Terraform state setup** :- done. # Make sure to create your own backend.hcl
+  file and update it with your setup values. Check backend.hcl.example file.
+- **Terraform basic files setup** :- done # Make sure create your own
+  terraform.tfvars file and update it with your setup values. Check
+  terraform.tfvars.example file.
+- **Validation** -
+
+```sh
+# Make sure 'terraform.tfvars' file exists with updated values.
+# Make sure 'backend.hcl' fle exists with updated values.
+
+# Log into AWS account through CLI and Execute terraform init
+aws sts get-caller-identity
+cd terraform
+terraform init -backend-config=backend.hcl
+terraform plan  # Automatically loads terraform.tfvars!
+```
+
+### Requirement 4
+
+- **Create Simple Github Actions Workflow** :-
+- **Setup Github repo variables** :-
+- **Test the pipeline** :-
+  - When PR is opened, tests needs to be executed and code should be deployed to 'dev' environment :-
+  - When 'dev' is successful, code needs to merged with 'main' and tests needs to run and deployed to 'test' environment :-
+- **Validation** -
+
+## Code
+### Commit Steps
+```sh
+# Make changes
+# Make sure executed from root directory.
+make pre-commit-all
+git add .
+git commit -m "test commit command"
+```
+
+### Create Feature Branch for changes
+### Create Bug Branch for changes
+
+## Terraform
+
+### Commands
+```sh
+cd terraform
+terraform init -backend-config=backend.hcl
 ```

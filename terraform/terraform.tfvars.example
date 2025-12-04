@@ -1,0 +1,13 @@
+# Terraform Variables Example
+# Copy this file to terraform.tfvars and fill in your actual values
+# terraform.tfvars should be gitignored and not committed to the repository
+
+# AWS region where Service Catalog resources will be created
+aws_region = "us-west-2"
+
+# Hub account ID (12-digit AWS account ID)
+hub_account_id = "123456789012"
+
+# Hub account OIDC role ARN (used by GitHub Actions)
+# This role must be pre-provisioned in the hub account
+hub_account_role_arn = "arn:aws:iam::123456789012:role/GitHubActionsServiceCatalogRole"
