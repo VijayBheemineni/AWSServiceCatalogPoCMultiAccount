@@ -11,10 +11,21 @@ jobs:
   code-quality-checks:
     name: code-quality-checks
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
+      pull-requests: write # For PR comments
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Authenticate to AWS
+        uses: ./.github/actions/aws-auth
+        with:
+          role-arn: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          session-name: GitHubActions-CodeQuality
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -82,9 +93,19 @@ jobs:
       github.event_name == 'push' &&
       startsWith(github.ref, 'refs/heads/') &&
       github.ref != 'refs/heads/main'
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Authenticate to AWS
+        uses: ./.github/actions/aws-auth
+        with:
+          role-arn: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          session-name: GitHubActions-CodeQuality
 
       - name: Deploy to Dev
         run: |
@@ -103,9 +124,19 @@ jobs:
     if: >
       github.event_name == 'push' &&
       github.ref == 'refs/heads/main'
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Authenticate to AWS
+        uses: ./.github/actions/aws-auth
+        with:
+          role-arn: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          session-name: GitHubActions-CodeQuality
 
       - name: Deploy to Test
         run: |
