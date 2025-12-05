@@ -1,5 +1,4 @@
 # Output Values
-# Test
 
 output "aws_region" {
   description = "AWS region where resources are deployed"
