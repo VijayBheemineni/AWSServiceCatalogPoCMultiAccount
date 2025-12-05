@@ -43,6 +43,14 @@ jobs:
                   tflint --init
               continue-on-error: true
 
+            - name: Setup terraform-docs
+              run: |
+                  curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.17.0/terraform-docs-v0.17.0-linux-amd64.tar.gz
+                  tar -xzf terraform-docs.tar.gz
+                  chmod +x terraform-docs
+                  sudo mv terraform-docs /usr/local/bin/
+                  rm terraform-docs.tar.gz
+
             - name: Run pre-commit checks
               uses: pre-commit/action@v3.0.1
               env:
