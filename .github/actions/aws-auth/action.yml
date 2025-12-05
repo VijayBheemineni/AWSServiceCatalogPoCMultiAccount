@@ -1,0 +1,44 @@
+name: "AWS OIDC Authentication"
+description: "Configure AWS credentials using OIDC and verify authentication"
+
+inputs:
+  role-arn:
+    description: "AWS IAM Role ARN to assume"
+    required: true
+  aws-region:
+    description: "AWS Region"
+    required: true
+  session-name:
+    description: "Role session name"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.role-arn }}
+        aws-region: ${{ inputs.aws-region }}
+        role-session-name: ${{ inputs.session-name }}
+
+    - name: Verify AWS Authentication
+      shell: bash
+      run: |
+        echo "Testing AWS authentication..."
+
+        # Mask the role ARN to prevent it from appearing in logs
+        echo "::add-mask::${{ inputs.role-arn }}"
+
+        # Get caller identity and mask sensitive information
+        CALLER_IDENTITY=$(aws sts get-caller-identity)
+        ACCOUNT_ID=$(echo "$CALLER_IDENTITY" | jq -r '.Account')
+        USER_ID=$(echo "$CALLER_IDENTITY" | jq -r '.UserId')
+
+        # Mask Account ID and User ID
+        echo "::add-mask::$ACCOUNT_ID"
+        echo "::add-mask::$USER_ID"
+
+        echo "Account: $ACCOUNT_ID"
+        echo "UserId: $USER_ID"
+        echo "✅ AWS authentication successful!"
