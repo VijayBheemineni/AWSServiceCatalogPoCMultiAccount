@@ -50,7 +50,7 @@ repos:
         name: Terraform lint
         description: Lints Terraform files with TFLint
         args:
-          - --args=--config=__GIT_WORKING_DIR__terraform/.tflint.hcl
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
       - id: terraform_checkov
         name: Terraform security scan
         description: Runs Checkov security scanner on Terraform

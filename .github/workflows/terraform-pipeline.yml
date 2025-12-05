@@ -6,9 +6,39 @@ on:
             - "**"
 jobs:
     test:
-        name: Run Tests
+        name: code-quality-checks
         runs-on: ubuntu-latest
 
         steps:
-            - name: Print Echo
-              run: echo "Hello Test"
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                  terraform_version: 1.6.0
+
+            - name: Setup TFLint
+              uses: terraform-linters/setup-tflint@v4
+              with:
+                  tflint_version: latest
+
+            - name: Cache pre-commit
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/pre-commit
+                  key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+
+            - name: Intall pre-commit dependencies
+              run: |
+                  pip install pre-commit checkov yamllint
+
+            - name: Initialize TFLint
+              run: |
+                  cd terraform
+                  tflint --init
+              continue-on-error: true
