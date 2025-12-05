@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: code-quality-checks
     # Deploy to dev needs to be executed whenever 'push' happens and its not 'main' branch.
-    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+    if: ${{ github.event_name == 'push' && github.ref != 'refs/heads/main' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
