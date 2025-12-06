@@ -26,5 +26,19 @@ runs:
       shell: bash
       run: |
         echo "Testing AWS authentication..."
-        aws sts get-caller-identity
-        echo "AWS authentication successful!"
+
+        # Mask the role ARN to prevent it from appearing in logs
+        echo "::add-mask::${{ inputs.role-arn }}"
+
+        # Get caller identity and mask sensitive information
+        CALLER_IDENTITY=$(aws sts get-caller-identity)
+        ACCOUNT_ID=$(echo "$CALLER_IDENTITY" | jq -r '.Account')
+        USER_ID=$(echo "$CALLER_IDENTITY" | jq -r '.UserId')
+
+        # Mask Account ID and User ID
+        echo "::add-mask::$ACCOUNT_ID"
+        echo "::add-mask::$USER_ID"
+
+        echo "Account: $ACCOUNT_ID"
+        echo "UserId: $USER_ID"
+        echo "✅ AWS authentication successful!"

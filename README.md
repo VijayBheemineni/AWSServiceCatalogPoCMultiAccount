@@ -79,9 +79,9 @@ terraform plan  # Automatically loads terraform.tfvars!
 - **Validation** -
 
 ### Requirement 5
-- **Create GitHub Repo Variables** :-
+- **Create GitHub Repo Secret Variables** :-
   - AWS_REGION :-
-  - OIDC_ROLE_ARN(Secret) :-
+  - OIDC_ROLE_ARN :-
   - TF_STATE_BUCKET :-
   - TF_STATE_KEY :-
 - **Assume OIDC ROle and Check** :-
