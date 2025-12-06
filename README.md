@@ -78,6 +78,14 @@ terraform plan  # Automatically loads terraform.tfvars!
   - When 'dev' is successful, code needs to merged with 'main' and tests needs to run and deployed to 'test' environment :-
 - **Validation** -
 
+### Requirement 5
+- **Create GitHub Repo Variables** :-
+  - AWS_REGION :-
+  - OIDC_ROLE_ARN(Secret) :-
+  - TF_STATE_BUCKET :-
+  - TF_STATE_KEY :-
+- **Assume OIDC ROle and Check** :-
+
 ## Code
 ### Commit Steps
 ```sh
